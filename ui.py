@@ -1,72 +1,15 @@
 import cocos
 from cocos import director
-# import os
-# import time
-# import threading
-
-# class Text(cocos.layer.ColorLayer):
-# 	def __init__(self):
-# 		super( Text, self ).__init__(0,0,0,0,width=200,height=30)
-# 		label = cocos.text.Label('网易云音乐',
-# 								 font_name='微软雅黑',
-# 								 font_size=12)
-# 		self.add(label)
-
-# class Like(cocos.layer.ColorLayer):
-# 	is_event_handler = True
-# 	def __init__(self):
-# 		super( Like, self ).__init__(0,0,0,0,width=40,height=40)
-# 		self.like = cocos.sprite.Sprite('image/like.png')
-# 		self.like.scale = 40 / self.like.height
-# 		self.like.image_anchor = (20, 0)
-# 		self.like.position = (0, 0)
-# 		self.add(self.like)
-		# self.addsprite('image/like.jpg')
-		# self.addsprite('image/pic.png')
-
-	# def addsprite(self, jpg):
-	# 	self.sprite = cocos.sprite.Sprite(jpg)
-	# 	print('载入',jpg)
-	# 	self.sprite.scale = 160 / self.sprite.height
-	# 	self.sprite.image_anchor = (0, 0)
-	# 	self.sprite.position = (0, 0)
-	# 	self.add(self.sprite)
-
-	# def on_mouse_press(self, x, y, buttons, modifiers):
-	# 	if (self.x-self.width//2) <= x <= (self.x+self.width//2) and\
-	# 	   self.y <= y <= (self.y+self.height):
-	# 		print('pic', x, y)
+from cocos.actions import Repeat, RotateBy, Reverse#,,ScaleBy,Show
 
 class Like(cocos.layer.ColorLayer):
 	is_event_handler = True
 	def __init__(self):
 		super( Like, self ).__init__(0,0,0,0,width=40,height=40)
-		# self.mpg123 = mpg123
 		self.hl_flag = False
-		# pause_flag 表示播放器状态,播放时显示暂停图标
 		self.like_flag = False
 
-		# self.red = cocos.sprite.Sprite('image/red.png')
-		# self.red.scale = 40 / self.red.height
-		# self.red.image_anchor = (20, 0)
-		# self.red.position = (0, 0)
-		
-		# self.red_hl = cocos.sprite.Sprite('image/red_hl.png')
-		# self.red_hl.scale = 40 / self.red_hl.height
-		# self.red_hl.image_anchor = (20, 0)
-		# self.red_hl.position = (0, 0)
-
-		# self.like = cocos.sprite.Sprite('image/like.png')
 		self.addsprite('image/like.png')
-		# self.like.scale = 40 / self.like.height
-		# self.like.image_anchor = (20, 0)
-		# self.like.position = (0, 0)
-		# self.add(self.like)
-
-		# self.like_hl = cocos.sprite.Sprite('image/like_hl.png')
-		# self.like_hl.scale = 40 / self.like_hl.height
-		# self.like_hl.image_anchor = (20, 0)
-		# self.like_hl.position = (0, 0)
 
 	def addsprite(self, jpg):
 		self.sprite = cocos.sprite.Sprite(jpg)
@@ -118,22 +61,44 @@ class Pic(cocos.layer.ColorLayer):
 	is_event_handler = True
 	def __init__(self):
 		super( Pic, self ).__init__(0,0,0,0,width=160,height=160)
-		self.addsprite('image/source.jpg')
 		# self.addsprite('image/pic.png')
+		# self.cp = cocos.sprite.Sprite('image/cp.png')
+		# self.cp.scale = 160 / self.cp.height
+		# self.cp.position = (80, 80)
+		# self.add(self.cp)
+		self.addcp()
+		self.cp.do( Repeat(RotateBy(360, duration=10)) )
 
-	def addsprite(self, jpg):
-		self.sprite = cocos.sprite.Sprite(jpg)
-		print('载入',jpg)
-		self.sprite.scale = 160 / self.sprite.height
-		self.sprite.image_anchor = (0, 0)
-		self.sprite.position = (0, 0)
-		self.add(self.sprite)
+		self.gz = cocos.sprite.Sprite('image/gz.png')
+		self.gz.scale = 0.3
+		self.gz.image_anchor = (117, 204)
+		self.gz.position = (80, 170)
+		self.add(self.gz, z=1)
+		self.gz.do( RotateBy(25, duration=0.5) )
+
+	# def addsprite(self, jpg):
+	# 	self.sprite = cocos.sprite.Sprite(jpg)
+	# 	print('载入',jpg)
+	# 	self.sprite.scale = 160 / self.sprite.height
+	# 	# self.sprite.image_anchor = (0, 0)
+	# 	self.sprite.position = (80, 80)
+	# 	self.add(self.sprite)
 
 	def on_mouse_press(self, x, y, buttons, modifiers):
 		if self.x <= x <= (self.x+self.width) and\
 		   self.y <= y <= (self.y+self.height):
 			print('pic', x, y)
 
+	def addcp(self):
+		self.cp = cocos.sprite.Sprite('image/cp.png')
+		self.cp.scale = 160 / self.cp.height
+		self.cp.position = (80, 75)
+		self.add(self.cp, z=0)
+
+	def stopcp(self):
+		self.remove(self.cp)
+		self.addcp()
+		print('addcp')
 	# def update(self):
 	# 	self.remove(self.sprite)
 	# 	self.addsprite('image/pic.png')
@@ -146,9 +111,10 @@ class Pic(cocos.layer.ColorLayer):
 
 class Play(cocos.layer.ColorLayer):
 	is_event_handler = True
-	def __init__(self, mpg123):
+	def __init__(self, mpg123, pic):
 		super( Play, self ).__init__(0,0,0,0,width=40,height=40)
 		self.mpg123 = mpg123
+		self.pic = pic
 		self.hl_flag = False
 		# pause_flag 表示播放器状态,播放时显示暂停图标
 		self.pause_flag = False
@@ -206,10 +172,14 @@ class Play(cocos.layer.ColorLayer):
 				self.remove(self.play_hl)
 				self.add(self.pause_hl)
 				self.mpg123.pause()
+				self.pic.cp.do( Repeat(RotateBy(360, duration=10)) )
+				self.pic.gz.do( RotateBy(25, 0.5) )
 			else:
 				self.remove(self.pause_hl)
 				self.add(self.play_hl)
 				self.mpg123.pause()
+				self.pic.stopcp()
+				self.pic.gz.do( Reverse(RotateBy(25, 0.5)) )
 
 			self.pause_flag = False if self.pause_flag else True
 
@@ -271,7 +241,7 @@ class Window(cocos.layer.Layer):
 		self.pic.position = (10, 10)
 		self.add(self.pic)
 
-		play = Play(mpg123)
+		play = Play(mpg123, self.pic)
 		# play.image_anchor = (20, 0)
 		play.position = (300, 10)
 		self.add(play)
@@ -339,6 +309,6 @@ class Window(cocos.layer.Layer):
 		
 
 if __name__ == '__main__':
-	director.director.init( width=420, height=180, caption='网易云音乐' )
+	director.director.init( width=420, height=180, caption='bj163' )
 	main_scene = cocos.scene.Scene( Window() )
 	director.director.run(main_scene)

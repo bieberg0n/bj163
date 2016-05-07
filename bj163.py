@@ -68,13 +68,11 @@ if not os.path.exists('cookie'):
 
 mpg123 = Mpg123()
 director = ui.director
-director.director.init( width=420, height=180, caption='网易云音乐' )
+director.director.init( width=420, height=180, caption='bj163' )
 window = ui.Window(mpg123)
 main_scene = ui.cocos.scene.Scene( window )
 
 t = threading.Thread(target=fm163)
 t.setDaemon(True)
-# p = multiprocessing.Process(target=director.director.run,args=(main_scene,))
 t.start()
 director.director.run(main_scene)
-# p.terminate()
